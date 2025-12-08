@@ -1,0 +1,53 @@
+LTspice 24.1.7 for Windows
+Circuit: E:\Síntesis de Redes Activas\Tps\VFA-CFA.net
+Start Time: Mon Dec  8 13:53:08 2025
+solver = Normal
+Maximum thread count: 8
+tnom = 27
+temp = 27
+method = trap
+Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
+Starting Gmin stepping
+Increasing initial diagonal Gmin to 100
+Gmin = 100
+Gmin = 10.7374
+vernier = 0.5
+vernier = 0.25
+vernier = 0.125
+Gmin = 8.84134
+vernier = 0.166667
+vernier = 0.0833333
+Gmin = 6.98329
+vernier = 0.0416667
+vernier = 0.0208333
+vernier = 0.0104167
+vernier = 0.00520833
+vernier = 0.00260417
+vernier = 0.00130208
+vernier = 0.000651042
+vernier = 0.000488281
+Gmin = 0
+Gmin = 0
+Gmin stepping failed
+
+Starting source stepping with srcstepmethod=0
+Source Step = 3.0303%
+Source Step = 33.3333%
+Source Step = 63.6364%
+Source Step = 86.3636%
+Source Step = 88.6364%
+Source Step = 90.5303%
+Source Step = 92.4242%
+Source Step = 94.3182%
+Source Step = 96.2121%
+vernier = 0.09375
+Source Step = 98.7689%
+Source stepping succeeded in finding the operating point.
+
+Total elapsed time: 7.404 seconds.
+
+Files loaded:
+E:\Síntesis de Redes Activas\Tps\VFA-CFA.net
+E:\LM324.lib
+E:\Síntesis de Redes Activas\Tps\Laboratorio N°3\LM6181.lib
+
