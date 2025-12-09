@@ -1,0 +1,508 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage[left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{subcaption}
+\usepackage{floatrow}
+\usepackage{textcomp}
+\usepackage{siunitx}
+\geometry{a4paper}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{matlab-prettifier}   % mejora el resaltado de MATLAB
+\lstset{style=Matlab-editor, basicstyle=\mlttfamily\small}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Banner_UNC_FCEFYN_Mesa_de_trabajo_1.png}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{UNC_Escudo.png}
+\end{figure}
+
+{
+\centering
+\LARGE \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} 
+\vspace{0.5em}
+
+\large FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES  
+\vspace{0.75em}
+
+\large CÁTEDRA DE SÍNTESIS DE REDES ACTIVAS 
+\vspace{1.25em}
+
+\large \textbf{TRABAJO PRÁCTICO DE LABORATORIO N°4: FILTROS ACTIVOS} 
+\vspace{4em}
+
+\large Grupo N°10
+\vspace{1.25em}
+
+\large Alumnos:
+\vspace{1.25em}
+
+\large Fernández Segovia, Sergio Andrés CI: 10728127
+\vspace{0.5em}
+
+\large Richter, Juan Bautista DNI: 45375789
+\vspace{2em}
+
+\large Profesor:
+\vspace{0.5em}
+
+\large Ing. Ferreyra, Pablo
+\vspace{5em}
+
+\large Noviembre / 2025
+\par
+}
+
+\thispagestyle{empty}
+\clearpage
+\pagenumbering{arabic}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introducción}
+La \textit{Teoría de Filtros Activos de Segundo Orden} aborda aspectos fundamentales del procesamiento analógico de señales. Mediante una Etapa Bicuadrática, es posible ajustar parámetros importantes, tales como la Frecuencia del Polo ($w_{p}$) y el Factor de Calidad del Polo ($Q_p$), para así obtener respuestas Pasa Bajos, Pasa Altos o Pasa Banda, según la estructura utilizada. 
+\vspace{0.5em}
+
+Para obtener la \textit{Función del Filtro} a sintetizar mediante una bicuadrática, existen distintas aproximaciones; entre las más utilizadas se pueden mencionar las de \textit{Chebyshev} y \textit{Butterworth}. La aproximación por polinomios de \textit{Chebyshev} se distingue por presentar, a igual orden, una pendiente de rechazo más pronunciada respecto a la de \textit{Butterworth}, a cambio de una cierta ondulación o rizado en la banda de paso. Estas propiedades teóricas condicionan las decisiones de diseño y la selección de topologías cuando se busca cumplir especificaciones prácticas.
+
+\section{Objetivos}
+El presente trabajo de laboratorio tiene como objetivo sintetizar un \textit{Filtro Activo}, cuya función de atenuación se debe obtener mediante una \textit{Aproximación de Polinomios de Chebychev}, para posteriormente evaluar la \textit{Sensibilidad} del mismo ante variaciones de los componentes seleccionados para su implementación. El filtro a sintetizar debe cumplir con las especificaciones correspondientes a la plantilla que se muestra a continuación. 
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Plantilla_Requerimientos.png}
+        \caption{Plantilla de Requerimientos}
+    \label{Figura}
+\end{figure}
+
+\newpage
+\section{Desarrollo}
+\subsection{Aproximación de Chebyshev}
+De la plantilla proporcionada, se puede observar que el filtro a desarrollar es un \textit{Pasa Banda} y la \textit{Banda de Paso} está comprendida entre las frecuencias de 800 [Hz] y 1250 [Hz]. Asimismo, se detallan las \textit{Bandas de Rechazo}, conformadas por las frecuencias inferiores a 200 [Hz] y superiores a 5000 [Hz].
+\vspace{0.5em}
+
+Primeramente, se debe encontrar la \textit{Función de Transferencia} del filtro en cuestión; para ello, se utiliza como herramienta de cálculo el entorno de programación que ofrece \textit{Matlab}.  A continuación, se muestra el código realizado; en el mismo, luego de definir las \textit{Bandas de Paso y de Rechazo}, se determina el orden mínimo del filtro, parámetro requerido para que, a través del comando \textit{cheby1}, se pueda obtener la \textit{Función de Transferencia} buscada.
+\vspace{0.5em}
+
+\lstinputlisting[]{Funcion_Filtro.m}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Funcion_Filtro.png}
+        \caption{Función de Transferencia}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+Otro detalle que se observa en el código es que se descompone la \textit{Función de Transferencia} mediante el comando \textit{tf2sos}, ésto con el objeto de poner en evidencia que dicha función puede expresarse como el producto de secciones bicuadráticas, concretamente, en el producto de un \textit{Filtro Pasa Bajo} y un \textit{Pasa Alto}.
+\vspace{0.5em}
+
+Una vez cumplido este punto, se procede a verificar si el filtro calculado cumple con las especificaciones planteadas inicialmente. En ese sentido, se presenta una tabla en la cual se detallan las magnitudes para las frecuencias de interés, así como el \textit{Diagrama de Bode} elaborado por \textit{Matlab}, para facilitar la visualización de las \textit{Bandas de  Paso y de Rechazo} y las \textit{Secciones Bicuadráticas}.
+\vspace{0.5em}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|}\hline
+         \textbf{Frecuencia [Hz]}& \textbf{Magnitud [dB]}\\\hline
+         200& -34.832\\\hline
+         800& -0.25\\\hline
+         1250& -0.25\\\hline
+         5000& -34.832\\ \hline
+    \end{tabular}
+    \caption{Tabla Resumen}
+    \label{tab:placeholder}
+\end{table}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Filtro_PasaBanda.png}
+        \caption{Diagrama de Bode}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+\subsection{Topología Bicuadrática}
+El siguiente punto a tratar es sintetizar el filtro utilizando las \textit{Topologías Bicuadráticas} estudiadas en la asignatura. Para ello, se toma como punto de partida la descomposición en secciones bicuadráticas provista por la plantilla, la cual se muestra a continuación. En la misma, se puede notar que la \textit{Función de Transferencia} resulta del producto de dos \textit{Filtros Pasa Banda}.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\linewidth]{Descomposicion.png}
+        \caption{Función de Transferencia Descompuesta}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Por otro lado, se sabe que dentro de las \textit{Topologías Bicuadráticas} existen las de \textit{Realimentación Positiva} y \textit{Realimentación Negativa}. En este caso, se optó por aplicar la \textit{Realimentación Positiva}; seguidamente, se muestra el esquema circuital correspondiente a esta topología que permite sintetizar un \textit{Filtro Pasa Banda} y es el modelo a seguir para la realización de ambos términos bicuadráticos de la expresión anterior.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Topologia_Bicuadratica.png}
+        \caption{Topología Bicuadrática de Realimentación Positiva}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+A través del paquete de \textit{Matemática Simbólica} de \textit{Matlab}, se procede a hallar la \textit{Función de Transferencia} de este sistema. A continuación, se muestra el código realizado, en el cual se plantea el sistema de ecuaciones siguiendo el \textit{Método de los Nodos}, teniendo como incógnitas las tensiones en los nodos especificados como \textit{'1'} y \textit{'2'}, de acuerdo con el circuito. Sin embargo, la tensión incógnita de interés es la '1' debido a que se trata de la \textit{Tensión de la Entrada No Inversora} y es sobre éste parámetro en el que se definen las funciones de transferencia denominadas como \textit{Feedforward (TFF)} y \textit{Feedback (TFB)}; ambas son necesarias, junto con la relación de las resistencias que conforman la realimentación negativa \textit{(k)}, para poder hallar la \textit{Función de Transferencia}.
+
+\begin{equation}
+    \Large{T_{v} =  \frac{k \cdot T_{FF}}{1 - k \cdot T_{FB}}}
+\end{equation}
+
+\newpage
+\begin{equation}
+    \Large{T_{FF} = \left.\frac{V_{o}}{V_{in}}\right\vert_{V_{o'} = 0}}
+\end{equation}
+
+\begin{equation}
+    \Large{T_{FB} = \left.\frac{V_{o}}{V_{o'}}\right\vert_{V_{in} = 0}}
+\end{equation}
+
+\begin{equation}
+    \Large{k = 1 + \frac{r_{2}}{r_{1}}}
+\end{equation}
+
+\lstinputlisting[]{Funcion_Bicuadratica.m}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Funcion_Topologia.png}
+        \caption{Función de Transferencia de la Bicuadrática}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+\subsection{Selección de Componentes}
+En este apartado, se busca dimensionar adecuadamente los componentes a utilizar. Se debe recordar que se está tratando la \textit{Función del Filtro} como el producto de dos bicuadráticas; por lo tanto, se cuenta con dos bloques fundamentales interconectados entre sí, cada uno asociado con una sección. Por otro lado, se sabe que las bicuadráticas presentan la siguiente estructura:
+
+\begin{equation}
+    \Large{T(s) = K \cdot \frac{s^2 + \frac{w_z}{Q_z}\cdot s + {w_z}^2}{s^2 + \frac{w_p}{Q_p}\cdot s + {w_p}^2}}
+\end{equation}
+
+En este caso particular, dado que se trata de \textit{Filtros Pasa Banda} se tiene la siguiente expresión simplificada, donde se define $w_p$ como la \textit{Frecuencia del Polo}, $Q_p$ como el \textit{Factor de Calidad del Polo} y finalmente, la relación ${w_p}/{Q_p}$ como el \textit{Ancho de Banda}:
+
+\begin{equation}
+    \Large{T(s) = \frac{K\cdot s}{s^2 + \frac{w_p}{Q_p}\cdot s + {w_p}^2}}
+\end{equation}
+
+La estrategia a seguir para la selección de los componentes se basa en la \textit{Técnica de Igualación de Coeficientes}, la cual, como su nombre lo indica, consiste en igualar los términos de la estructura general con los correspondientes a la \textit{Función del Filtro}. De esta manera, se construye un sistema de ecuaciones en el cual intervienen todos los componentes que conforman dicho filtro. Sin embargo, se presenta el inconveniente de que hay más incógnitas que ecuaciones, lo que hace que existan infinitas soluciones. Es por este motivo que se toma el criterio de considerar que todas las resistencias y capacitores tienen el mismo valor.
+\vspace{0.5em}
+
+Esta solución viene acompañada de otro concepto importante conocido como la \textit{Técnica de Escaleo de Impedancias}, la cual permite simplificar aún más el diseño mediante la normalización de los componentes y, posteriormente, mediante un \textit{Factor de Escala} a elección, obtener los valores de los mismos en verdadera magnitud, es decir, llevar los resultados a valores prácticos. A continuación, se muestran las expresiones finales que resultan de tener en cuenta las técnicas mencionadas.
+
+\begin{equation}
+    \Large{C_1 = C_2 = 1}
+\end{equation}
+
+\begin{equation}
+    \Large{R_1 = R_2 = R_3 = R = \frac{\sqrt{2}}{w_p}}
+\end{equation}
+
+\begin{equation}
+    \Large{k = 1 + \frac{r_2}{r_1} = 4 - \frac{\sqrt{2}}{Q_p}}
+\end{equation}
+\vspace{0.5em}
+
+A partir de estas expresiones, se procede con la \textit{Síntesis de las Bicuadráticas}, siendo necesario primeramente identificar la \textit{Frecuencia del Polo ($w_p$)} y el \textit{Factor de Calidad del Polo (${Q_p}$)} en sus correspondientes \textit{Funciones de Transferencia}. Con respecto al \textit{Factor de Escala}, se optó por el valor de ${10}^7$ para ambas etapas. Dicho ésto, seguidamente se muestra el código elaborado para este punto.
+
+\newpage
+\subsubsection{Síntesis del Bloque N°1}
+
+\lstinputlisting[]{Sintesis_Bloque_1.m}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Componentes_Bloque_1.png}
+        \caption{Componentes Bloque N°1}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+Como se puede observar, las resistencias necesarias para implementar esta bicuadrática poseen valores no comerciales, excepto la de 1 [k$\Omega$]; sin embargo, es posible aproximarse a los mismos mediante los valores que sí lo son. En ese sentido, la selección de los componentes para este bloque queda de la siguiente manera.
+\vspace{0.4em}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|}\hline
+         \textbf{Componente}& \textbf{Valor}\\\hline
+         $R$& $1.8[k\Omega]$\\\hline
+         $C$& $100[nF]$\\\hline
+         $r_1$
+& $1[k\Omega]$\\\hline
+         $r_2$& $2.2[k\Omega] + 220[\Omega]$\\ \hline
+    \end{tabular}
+    \caption{Tabla Componentes Bloque N°1}
+    \label{tab:placeholder}
+\end{table}
+
+Con esto resuelto, se realiza la simulación del circuito obtenido utilizando el entorno de \textit{LTspice}. Además, cabe aclarar que el mismo cuenta con la opción de incluir \textit{Funciones de Transferencia} mediante el componente especificado como \textit{"Laplace"}. Esta funcionalidad es muy interesante, ya que se puede cargar en dicho componente la \textit{Función del Filtro} a sintetizar y tener su \textit{Respuesta en Frecuencia} como referencia. Por lo tanto, esto permite comparar la \textit{Salida del Circuito} obtenido con la \textit{Original}.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\linewidth]{Funcion_Transferencia.png}
+        \caption{Componente "Laplace"}
+    \label{Figura}
+\end{figure}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.55\linewidth]{Bloque_N1.png}
+        \caption{Circuito Bloque N°1}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_Bloque_N1.png}
+        \caption{Diagrama de Bode Bloque N°1}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Síntesis del Bloque N°2}
+\lstinputlisting[]{Sintesis_Bloque_2.m}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Componentes_Bloque_2.png}
+        \caption{Componentes Bloque N°2}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Siguiendo la misma idea del Bloque N°1, es decir, aproximarse a las resistencias calculadas mediante valores comerciales, la selección de los componentes queda de la siguiente manera.
+\vspace{0.5em}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|}\hline
+         \textbf{Componente}& \textbf{Valor}\\\hline
+         $R$& $2.7[k\Omega]+220[\Omega]$\\\hline
+         $C$& $100[nF]$\\\hline
+         $r_1$
+& $1[k\Omega]$\\\hline
+         $r_2$& $2.2[k\Omega] + 220[\Omega]$\\ \hline
+    \end{tabular}
+    \caption{Tabla Componentes Bloque N°2}
+    \label{tab:placeholder}
+\end{table}
+\vspace{0.5em}
+
+Con estos valores, se realiza la simulación correspondiente y, nuevamente, utilizando la funcionalidad "Laplace", se compara la \textit{Respuesta en Frecuencia} del Circuito con la de la \textit{Función de Transferencia Original}.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.55\linewidth]{Bloque_N2.png}
+        \caption{Circuito Bloque N°2}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_Bloque_N2.png}
+        \caption{Diagrama de Bode Bloque N°2}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Filtro Final}
+Una vez implementadas las bicuadráticas, lo que sigue es acoplarlas en cascada para llegar a la \textit{Función Final del Filtro Pasa Banda}. A continuación, se muestra el esquema circuital logrado y se compara la \textit{Salida} del mismo con la referencia.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bloque_N12.png}
+        \caption{Filtro Final}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_Bloque_N12.png}
+        \caption{Diagrama de Bode Filtro Final}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Ajuste de Ganancia}
+Como se puede observar en la gráfica anterior, existe una discrepancia notable entre ambas curvas; concretamente, la \textit{Función de Transferencia del Circuito} se encuentra desplazada hacia arriba aproximadamente \textit{23 dB}. Por este motivo, se consideró conveniente incluir una \textit{Etapa Adicional} que permita realizar un \textit{Ajuste de Ganancia} en la \textit{Salida del Circuito}. Para ello, se prevé una etapa conformada por un \textit{Amplificador Operacional} en \textit{Configuración Inversora}. En las siguientes líneas de código se detalla el procedimiento numérico para dimensionar los componentes necesarios.
+\vspace{0.5em}
+
+\lstinputlisting[]{Ajuste_Ganancia.m}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Componentes_Bloque_3.png}
+        \caption{Componentes Bloque N°3}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.55\linewidth]{Bloque_N3.png}
+        \caption{Circuito Bloque N°3}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Filtro Final Corregido}
+A continuación, se muestra el esquema circuital final, que incluye la \textit{Etapa Adicional}, así como la \textit{Respuesta en Frecuencia} del mismo, observándose una mayor aproximación a la \textit{Función del Filtro Original} y, por lo tanto, un mejor resultado en el filtro obtenido.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bloque_N123.png}
+        \caption{Filtro Final Corregido}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_Bloque_N123.png}
+        \caption{Diagrama de Bode Filtro Final Corregido}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsection{Sensibilidad}
+Otro punto importante a tratar tiene que ver con la \textit{Sensibilidad}, es decir, qué tanto se ve afectado un determinado parámetro del sistema ante posibles variaciones en el valor nominal de los componentes utilizados. La necesidad de realizar este análisis se debe a que los diferentes componentes no tienen exactamente el mismo valor que indican, sino que cuentan con un cierto grado de incertidumbre, es decir, una tolerancia. 
+\vspace{0.5em}
+
+La \textit{Sensibilidad} se calcula de acuerdo con la siguiente expresión, donde se define como \textit{'p'} el \textit{Parámetro del Sistema} y como \textit{'x'} el \textit{Elemento} que influye en dicho parámetro.
+
+\begin{equation}
+    \Large{S_{x}^{p} =  \frac{x}{p} \cdot \frac{\partial{p}}{\partial{x}}}
+\end{equation}
+\vspace{0.5em}
+
+A partir de la estructura general de las bicuadráticas que se presentó anteriormente, se observa que los parámetros del sistema en cuestión son dos: la \textit{Frecuencia del Polo ($w_p$)} y el \textit{Ancho de Banda (${w_p}/{Q_p}$)}. De la \textit{Función de la Bicuadrática} se extraen las siguientes expresiones de los parámetros mencionados. 
+
+\begin{equation}
+    \Large{w_{p} =  \sqrt{\frac{R_{1} +R_{2}}{C_1 \cdot C_2 \cdot R_1 \cdot R_2 \cdot R_3}}}
+\end{equation}
+\vspace{0.5em}
+
+\begin{equation}
+    \Large{\frac{w_p}{Q_p} = bw_p = \frac{1}{C_1 \cdot R_1} + \frac{1}{C_2 \cdot R_3} + \frac{1}{C_1 \cdot R_3} + \frac{1 - k}{C_1 \cdot R_2} }
+\end{equation}
+\vspace{0.5em}
+
+Utilizando estas expresiones, se procede a calcular la sensibilidad de los mismos en relación con cada uno de los componentes a través del siguiente código realizado en \textit{Matlab}. Por otro lado, es necesario recordar que las dos bicuadráticas desarrolladas son de \textit{Realimentación Positiva}; por lo tanto, los cálculos siguientes aplican para ambas etapas.
+
+\newpage
+\lstinputlisting[]{Sensibilidad.m}
+\vspace{0.5em}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\linewidth]{Valores_Sensibilidad.png}
+        \caption{Sensibilidad}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+De acuerdo con estos resultados, se puede interpretar lo siguiente:
+\begin{itemize}
+    \item El incremento de un 1\% de \textit{R1} produce un decremento del 0.25\% de \textit{$w_p$} y un decremento del 1.81\% de \textit{$w_p/Q_p$}.
+    \item El incremento de un 1\% de \textit{R2} produce un decremento del 0.25\% de \textit{$w_p$} y un incremento del 4.43\% de \textit{$w_p/Q_p$}.
+    \item El incremento de un 1\% de \textit{R3} produce un decremento del 0.5\% de \textit{$w_p$} y un decremento del 3.62\% de \textit{$w_p/Q_p$}.
+    \item El incremento de un 1\% de \textit{C1} produce un decremento del 0.5\% de \textit{$w_p$} y un incremento del 0.81\% de \textit{$w_p/Q_p$}.
+    \item El incremento de un 1\% de \textit{C2} produce un decremento del 0.5\% de \textit{$w_p$} y un decremento del 1.81\% de \textit{$w_p/Q_p$}.
+\end{itemize}
+
+Esta información permite definir la tolerancia mínima que deben cumplir los diferentes componentes a utilizar para que la \textit{Respuesta del Filtro} se ajuste lo suficiente a las especificaciones indicadas en la plantilla. 
+\vspace{0.5em}
+
+Asimismo, en la consigna del presente laboratorio se solicita evaluar la peor desviación posible de los \textit{Parámetros del Sistema}, suponiendo que todos los elementos tienen una tolerancia del 10$\%$. Esto se resuelve mediante la sumatoria del producto de dos términos: la sensibilidad correspondiente al parámetro elegido y la tolerancia del componente asociada a dicha sensibilidad, ésta última expresada en decimal.
+
+\begin{equation}
+    \Large{\frac{\Delta{w_p}}{w_p} = \sum_{i=0}^{i}T_{x_i} \cdot S_{x_i}^{w_p}}
+\end{equation}
+
+\begin{equation}
+    \Large{\frac{\Delta{bw_p}}{bw_p} = \sum_{i=0}^{i}T_{x_i} \cdot S_{x_i}^{bw_p}}
+\end{equation}
+
+\begin{itemize}
+    \item Para el parámetro $w_p$, tanto en la primera como en la segunda etapa, se advierte un desvío total del 20$\%$
+    \item Para el parámetro $w_p/Q_p$ o $bw_p$, tanto en la primera como en la segunda etapa, se advierte un desvío total del 20$\%$.
+\end{itemize}
+
+
+\newpage
+\subsection{Simulación de Montecarlo}
+El \textit{Análisis de Montecarlo} es una herramienta útil que permite evaluar cómo influye la variación de los componentes en el rendimiento de un sistema. Este método consiste en realizar múltiples simulaciones y, en cada una de ellas, modificar los valores de los componentes dentro de un rango definido por una tolerancia. De esta manera, se puede determinar qué tan sólida es la respuesta del sistema ante dichas variaciones.
+\vspace{0.5em}
+
+Esta simulación fue realizada en \textit{LTspice}, para la cual se definieron como valores centrales de los componentes los valores calculados en los desarrollos anteriores. Asimismo, para el rango de variación de los mismos se consideró una tolerancia del 10$\%$; finalmente, se optó por realizar un total de 50 simulaciones. A continuación, se muestra el circuito preparado para el \textit{Análisis de Montecarlo}, así como las \textit{Respuestas del Filtro} obtenidas de este análisis.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Filtro_Montecarlo.png}
+        \caption{Filtro Final Montecarlo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Montecarlo.png}
+        \caption{Simulación de Montecarlo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+De la gráfica anterior se concluye que una tolerancia del 10$\%$ en los componentes no genera la confiabilidad suficiente en el filtro en cuanto a los requerimientos. En ese sentido, se realiza nuevamente la simulación, teniendo en cuenta ahora una tolerancia del 1$\%$ y se obtienen los siguientes resultados, los cuales presentan una mejor respuesta.
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Montecarlo_bis_1.png}
+        \caption{Simulación de Montecarlo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\section{Conclusión}
+En el presente laboratorio, se aplicaron conceptos relacionados con la \textit{Síntesis de Filtros Activos}. Durante su desarrollo, se profundizó en las \textit{Topologías Bicuadráticas} basadas en el \textit{Método de Sallen-Key}, lo que constituye un paso importante para implementar la \textit{Función de Transferencia del Filtro}. Para lograrlo, se pusieron en práctica las técnicas aprendidas, como la \textit{Igualación de Coeficientes} y el \textit{Escaleo de Impedancias}.
+\vspace{0.5em}
+
+Además, se realizó el estudio de la \textit{Sensibilidad} del filtro en función de los parámetros que lo conforman, permitiendo comprender cuánto afectan al rendimiento esperado del circuito. Esto, a su vez, introduce un nuevo concepto: \textit{Simulación de Montecarlo}. A través de esto, se logra establecer la tolerancia que se debe exigir a los diferentes componentes para mantener la coherencia con las especificaciones.
+\vspace{0.5em}
+
+\end{document}
