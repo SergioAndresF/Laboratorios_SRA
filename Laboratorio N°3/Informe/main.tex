@@ -1,0 +1,838 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage[left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{subcaption}
+\usepackage{floatrow}
+\usepackage{textcomp}
+\usepackage{siunitx}
+\geometry{a4paper}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  breaklines=true,
+  showstringspaces=false
+}
+
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Banner_UNC_FCEFYN_Mesa_de_trabajo_1.png}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{UNC_Escudo.png}
+\end{figure}
+
+{
+\centering
+\LARGE \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} 
+\vspace{0.5em}
+
+\large FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES  
+\vspace{0.75em}
+
+\large CÁTEDRA DE SÍNTESIS DE REDES ACTIVAS 
+\vspace{1.25em}
+
+\large \textbf{TRABAJO PRÁCTICO DE LABORATORIO N°3: COMPENSACIÓN} 
+\vspace{4em}
+
+\large Grupo N°10
+\vspace{1.25em}
+
+\large Alumnos:
+\vspace{1.25em}
+
+\large Fernández Segovia, Sergio Andrés CI: 10728127
+\vspace{0.5em}
+
+\large Richter, Juan Bautista DNI: 45375789
+\vspace{2em}
+
+\large Profesor:
+\vspace{0.5em}
+
+\large Ing. Ferreyra, Pablo
+\vspace{5em}
+
+\large Noviembre / 2025
+\par
+}
+
+\thispagestyle{empty}
+\clearpage
+\pagenumbering{arabic}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+\section{Introducción}
+Entre las familias de amplificadores empleados habitualmente, se distinguen los amplificadores \textit{Realimentados por Tensión (VFA)} y los \textit{Realimentados por Corriente (CFA)}. Cada uno presenta características dinámicas distintas; en el caso de los \textit{VFA}, suelen modelarse en términos del \textit{Producto Ganancia - Ancho de Banda ($GBW$)}, mientras que el comportamiento dinámico de los \textit{CFA} depende de \textit{Transimpedancia ($Z_T$)} y de la resistencia de realimentación externa, lo que implica métodos de diseño distintos.
+\vspace{0.5em}
+
+La \textit{Compensación} busca posicionar adecuadamente polos y ceros de la función de transferencia para garantizar estabilidad, una respuesta en frecuencia adecuada y una mínima ondulación en la banda útil. El \textit{Margen de Fase ($M\varphi$)} es un indicador práctico de la estabilidad relativa y condiciona tanto la respuesta transitoria como la robustez ante perturbaciones. Estas diferencias dinámicas justifican la comparación de las topologías propuestas y la elección de estrategias de compensación, que se examinan en las secciones siguientes.
+
+\section{Objetivos}
+El presente trabajo de laboratorio tiene como objetivo el diseño de amplificadores utilizando las tecnologías \textit{VFA} y \textit{CFA}. La idea central es poner en práctica los conceptos aprendidos de \textit{Compensación}. Se trabajan tres diseños diferentes de \textit{Amplificadores Compuestos}, cuyo esquema circuital es el que se muestra a continuación. Asimismo, para el diseño se debe tener en cuenta que los circuitos cumplan con las siguientes especificaciones.
+
+\begin{itemize}
+    \item Una \textit{Ganancia Global} de 20 [dB] que es equivalente a 10 veces.
+    \item Lograr que el funcionamiento de los circuitos se encuentre en condiciones próximas a la \textit{Máxima Planicidad de Módulo (MPM)}. Esto implica que el \textit{Margen de Fase ($M\varphi$)} sea aproximadamente de 65° y que el \textit{Factor de Calidad del Polo ($Q_p$)} esté alrededor de 0.707
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Amplificador_Compuesto.png}
+        \caption{Amplificador Compuesto}
+    \label{Figura}
+\end{figure}
+
+En cuanto a los diseños mencionados al inicio, se prevé la realización de los siguientes:
+
+\begin{itemize}
+    \item \textit{Circuito N°1:} VFA-VFA
+    \item \textit{Circuito N°2:} VFA-CFA
+    \item \textit{Circuito N°3:} VFA-CFA con Compensador Cero-Polo
+\end{itemize}
+
+\newpage
+\section{Desarrollo}
+
+\subsection{Circuito N°1: VFA - VFA}
+\subsubsection{Diseño del Circuito}
+El primer circuito a realizar está constituido únicamente por amplificadores de \textit{Tecnología VFA} y se eligió el \textit{Modelo LM324}. En la siguiente tabla se muestran las características importantes para el análisis, extraídas de la correspondiente hoja de datos.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|}\hline
+         \multicolumn{2}{|c|}{\textbf{Características LM324}}\\\hline
+         \textbf{Parámetro}& \textbf{Valor}\\\hline
+         $Ad_0$& $100 [dB]$\\\hline
+         $f_T$& $1 [MHz]$\\\hline
+         $f_{p1}$& $10 [Hz]$\\\hline
+         $f_{p2}$& $5.06 [MHz]$\\ \hline
+    \end{tabular}
+    \caption{Tabla LM324}
+    \label{tab:placeholder}
+\end{table}
+
+Para cumplir con la \textit{Ganancia de Lazo Cerrado} solicitada, se procede con el \textit{Método de Black} para identificar los componentes que intervienen en la misma. Para ello, se considera como \textit{Lazo de Realimentación} aquél que conecta la salida del \textit{Amplificador Compuesto} con la \textit{Entrada Inversora} del primer \textit{Amplificador VFA}. Ahora bien, si se observa el sistema desde una perspectiva de \textit{Diagrama de Bloques}, tenemos el siguiente esquema provisto por \textit{Simulink}, donde: \textit{$Ad(s)$} es la \textit{Función de Transferencia del VFA a Lazo Abierto}, \textit{$Avf_2(s)$} es la \textit{Función de Transferencia del segundo VFA a Lazo Cerrado} y, finalmente, \textit{$K$} es la \textit{Cantidad de Realimentación}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Diagrama_Bloques.png}
+        \caption{Amplificador Compuesto}
+    \label{Figura}
+\end{figure}
+
+\begin{equation}
+    \Large{Ad(s) = \frac{100000}{(1+\frac{s}{2\pi\cdot10[Hz]}) \cdot (1+\frac{s}{2\pi\cdot5.06\cdot10^6[Hz]})} }
+\end{equation}
+
+\begin{equation}
+    \Large{Avf_2(s) = \frac{1+\frac{R_2}{R_1}}{1+\frac{s}{2\pi\cdot f_{px}[Hz]}}} 
+\end{equation}
+
+\begin{equation}
+    \Large{K = \frac{Ri}{Ri+Rf}}
+\end{equation}
+
+Esta representación facilita la resolución del \textit{Método de Black} ya que se puede observar que la \textit{Ganancia de Lazo Cerrado} del sistema depende únicamente de la \textit{Red de Realimentación}. De esta manera, se logra establecer la relación que se debe cumplir entre las \textit{Resistencias} que conforman dicha red, para así ajustar la \textit{Ganancia Global} al valor requerido.
+
+\newpage
+\begin{equation}
+    \Large{GLA = \left.\frac{V_{o}}{V_{in}}\right\vert_{V_{o'} = 0} = Ad(s) \cdot Avf_2(s)}
+\end{equation}
+
+\begin{equation}
+    \Large{T = \left.\frac{V_{o}}{V_{o'}}\right\vert_{V_{in} = 0} = -K \cdot Ad(s) \cdot Avf_2(s)}
+\end{equation}
+
+\begin{equation}
+    \Large{Avfi = \frac{GLA}{|T|} = \frac{1}{K}=1+\frac{R_f}{R_i}}
+\end{equation}
+
+\begin{equation}
+    \Large{ \frac{R_f}{R_i}=9}
+\end{equation}
+
+En las especificaciones también se pide que el sistema opere en condiciones cercanas a la \textit{Máxima Planicidad de Módulo}. Para ello, se propone plantear el cálculo del \textit{Margen de Fase} ($M\varphi$) e igualarlo al valor deseado de 65°. Además, dado que la \textit{Frecuencia Crítica del Sistema (fg)} es mucho mayor en relación con la \textit{Frecuencia del 1er Polo del AO1 (fp1)}, se aproxima el término arcotangente de las mismas a 90°. De este modo, se halla la relación entre la \textit{Frecuencia Crítica (fg)} y la \textit{Frecuencia del Polo del AO2 (fpx)} necesaria para cumplir con la igualdad de la ecuación.
+
+\begin{equation}
+    \Large{M\varphi = 180°-\arctan{(\frac{f_g}{f_{p1}})} - \arctan{(\frac{f_g}{f_{px}})} = 90° -  \arctan{(\frac{f_g}{f_{px}})=65°}}
+\end{equation}
+
+\begin{equation}
+    \Large{\frac{f_g}{f_{px}} = 0.4663}
+\end{equation}
+
+Posteriormente, aplicando el concepto del \textit{Producto Ganancia - Ancho de Banda (GBW)} al \textit{Amplificador Compuesto} como sistema global y al \textit{AO2} de manera individual, se obtienen las siguientes dos ecuaciones, formando así, junto con la relación anterior, un sistema de tres ecuaciones con tres incógnitas.
+
+\begin{equation}
+    \Large{Ad(0) \cdot Avf_2(0) \cdot f_{p1} = \frac{1}{K} \cdot f_g}
+\end{equation}
+
+\begin{equation}
+    \Large{Avf_2(0) \cdot f_{px} =f_{T}}
+\end{equation}
+
+A través del sistema planteado, se logra determinar el valor de las frecuencias y la \textit{Ganancia de Lazo Cerrado del AO2}, siendo éste último necesario para definir la relación que deben cumplir las resistencias asociadas. A continuación, se muestran los resultados obtenidos.
+
+\begin{equation}
+    \Large{f_g = 215.94 [kHz]}
+\end{equation}
+
+\begin{equation}
+    \Large{f_{px} = 463.09 [kHz]}
+\end{equation}
+
+\begin{equation}
+    \Large{\frac{R_2}{R_1} = 1.159}
+\end{equation}
+
+Todo el procedimiento descrito anteriormente fue desarrollado mediante código, utilizando \textit{Python} como \textit{Lenguaje de Programación}. En el mismo, se fijaron algunos valores típicos de resistencias para poder dimensionar el resto. También se elaboraron los \textit{Diagramas de Bode} correspondientes a cada uno de los bloques del \textit{Circuito Global}.
+
+\newpage
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={7-61}]{Diseno_VFA_VFA.py}
+\end{tcolorbox}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\linewidth]{Componenetes_VFA_VFA.png}
+        \caption{Componentes Circuito VFA-VFA}
+    \label{Figura}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bode_VFA_VFA.png}
+        \caption{Magnitud y Fase Circuito VFA-VFA}
+    \label{Figura}
+\end{figure}
+
+\subsubsection{Cálculo de Parámetros}
+Una vez diseñado el \textit{Amplificador Compuesto}, a efecto de evaluar si cumple con las especificaciones inicialmente establecidas, se procede a calcular las características del mismo en lo que respecta a: la \textit{Ganancia de Lazo ($T_0$)}, la \textit{Frecuencia del Polo ($f_p$)}, la \textit{Distancia entre los Polos ($D_p$)}, el \textit{Factor de Calidad del Polo ($Q_p$)} y el \textit{Ancho de Banda a -3[dB] del Sistema a Lazo Cerrado ($f_H$)}. De igual manera, se adjunta el código trabajado para este procedimiento y las expresiones utilizadas.
+
+\begin{equation}
+    \Large{T_{0} = K \cdot Ad(0) \cdot Avf_2(0)}
+\end{equation}
+
+\begin{equation}
+    \Large{f_{p} = \sqrt{T_0 \cdot f_{p1} \cdot f_{px}}}
+\end{equation}
+
+\newpage
+\begin{equation}
+    \Large{D_{p} = \frac{f_{px}}{f_{p1}}}
+\end{equation}
+
+\begin{equation}
+    \Large{Q_{p} = \sqrt{\frac{T_0}{D_p}}}
+\end{equation}
+
+\begin{equation}
+    \Large{ \frac{-3}{\log{f_H}-\log{f_g}}=-20[dB]}
+\end{equation}
+\vspace{0.5em}
+
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={63-68}]{Diseno_VFA_VFA.py}
+\end{tcolorbox}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Resultados_C1.png}
+        \caption{Resultados Circuito VFA-VFA}
+    \label{Figura}
+\end{figure}
+
+Dentro de estos resultados, queda pendiente hallar el \textit{Margen de Fase} ($M\varphi$) del sistema, el cual puede estimarse a partir de la \textit{Respuesta al Escalón}, conociendo dos parámetros: el \textit{Coeficiente de Amortiguamiento ($\zeta$)} y el \textit{Sobrepasamiento ($SO$)}. Para facilitar esta tarea, se optó por utilizar el entorno de programación de \textit{Matlab}. A continuación, se muestra la curva de respuesta junto con los parámetros obtenidos y las fórmulas utilizadas. 
+\vspace{0.4em}
+
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={69-81}]{Diseno_VFA_VFA.py}
+\end{tcolorbox}
+
+\newpage
+\subsubsection{Respuesta al Escalón}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_C1.png}
+        \caption{Respuesta al Escalón Circuito VFA-VFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\begin{equation}
+    \large{\zeta = - \frac{\ln{SO}}{\sqrt{\pi^2+(\ln{SO})^2}}}
+\end{equation}
+
+\begin{equation}
+    \large{M\varphi = \arctan{(\frac{2\cdot\zeta}{\sqrt{\sqrt{1+4\cdot\zeta^4}-2\zeta^2}})}}
+\end{equation}
+\vspace{0.5em}
+
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={82-100}]{Diseno_VFA_VFA.py}
+\end{tcolorbox}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Resultados_C1_Escalon.png}
+        \caption{Resultados Respuesta al Escalón Circuito VFA-VFA}
+    \label{Figura}
+\end{figure}
+
+\newpage
+\subsubsection{Resultados}
+Finalmente, a partir de estos resultados, se puede observar lo siguiente:
+\begin{itemize}
+    \item El \textit{Circuito Global} presenta un valor de \textit{$Q_p$} de 0.683, el cual está bastante próximo al deseado de 0.707.
+    \item Se puede notar que las \textit{frecuencias $f_p$} y \textit{$f_H$} tienen valores cercanos, lo cual da como resultado un \textit{$\Omega_H$} de aproximadamente 0.96, siendo un buen indicio, ya que para la condición de \textit{MPM}, el \textit{$\Omega_H$} tiene un valor de 1.
+    \item Siguiendo la misma línea, el valor de \textit{$\Omega_G$} que resulta de la relación entre las frecuencias \textit{$f_g$} y \textit{$f_p$} es aproximadamente igual a 0.683; de igual manera, es cercano a 0.644, que sería el valor correspondiente para \textit{MPM}.
+    \item El \textit{Margen de Fase $M\varphi$} estimado es de aproximadamente 64.77°, un resultado muy cercano al buscado de 65°.  
+\end{itemize}
+\vspace{0.5em}
+
+\subsubsection{Simulación del Circuito}
+El objetivo de este punto es constatar los resultados obtenidos en el desarrollo anterior a través de simulaciones; para ello, se emplea como herramienta el programa \textit{LTspice}. Teniendo en cuenta los componentes que se determinaron, el circuito resultante es el que se muestra a continuación.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{VFA-VFA.png}
+        \caption{Circuito VFA-VFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+A modo de conocer la \textit{Ganancia Global}, se aplica en la \textit{Entrada del Circuito (Vin)} una \textit{Señal Senoidal} de Amplitud de 1 [V] y se observa en la \textit{Salida (Vout)} una Señal de Amplitud de 10 [V]; por lo tanto, se verifica que la \textit{Ganancia Global} del circuito es de 10 veces o 20 [dB]. Seguidamente, se adjunta el oscilograma obtenido en el que se muestran ambas señales.
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_VFA-VFA.png}
+        \caption{Salida VFA-VFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Otro valor que es posible corroborar mediante simulación es el \textit{Ancho de Banda a -3 [dB] del Sistema a Lazo Cerrado} a través del \textit{Diagrama de Bode} del circuito, efectuando un \textit{Barrido en Frecuencia}. De acuerdo con la curva obtenida, la frecuencia para la cual se tiene una caída de 3 [dB] ($f_H$) es de aproximadamente 338.8 [kHz], presentando una discrepancia del 11$\%$ con respecto al valor calculado de 305,03 [kHz].
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_VFA-VFA.png}
+        \caption{Respuesta en Frecuencia VFA-VFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Finalmente, se procede a estudiar la \textit{Respuesta al Escalón} y estimar el \textit{Margen de Fase ($M\varphi$)}. Se puede observar que el \textit{Pico Máximo} tiene un valor relativamente próximo al \textit{Valor de Establecimiento}. A partir del mismo, se calcula el \textit{Sobrepasamiento ($SO$)} y el \textit{Coeficiente de Amortiguamiento ($\zeta$)}. Utilizando las expresiones correspondientes, esto trae consigo una estimación de \textit{$M\varphi$} de aproximadamente 64.49°, un resultado bastante cercano al calculado de 64.77° y, por lo tanto, al buscado de 65° para \textit{MPM}.
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_C1_ltspice.png}
+        \caption{Respuesta al Escalón VFA-VFA}
+    \label{Figura}
+\end{figure}
+
+\newpage
+\subsection{Circuito N°2: VFA - CFA}
+\subsubsection{Diseño del Circuito}
+En este diseño del \textit{Amplificador Compuesto} se desea trabajar con ambas \textit{Tecnologías} de los \textit{Amplificadores Operacionales}, siendo constituido ahora por un \textit{VFA} y un \textit{CFA}, en ese orden, respectivamente. En cuanto a las especificaciones a cumplir, además de tener en cuenta las trabajadas en el \textit{Circuito N°1}, se agrega que la \textit{Frecuencia Crítica ($f_g$)} sea de 2 [MHz]. Por otro lado, con respecto a los modelos a utilizar, se mantiene como \textit{VFA} el \textit{LM324} y como \textit{CFA} se opta por el \textit{LM6181}, cuyas características se muestran en la siguiente tabla.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|}\hline
+         \multicolumn{2}{|c|}{\textbf{Características LM6181}}\\\hline
+         \textbf{Parámetro}& \textbf{Valor}\\\hline
+         $R_T$& $2.37[M\Omega]$\\\hline
+         $C_T$& $4.8 [pF]$\\\hline
+         $f_{p1}$& $14 [kHz]$\\\hline
+         $f_{p2}$& $82.3 [MHz]$\\ \hline
+    \end{tabular}
+    \caption{Tabla LM324}
+    \label{tab:placeholder}
+\end{table}
+
+ De manera análoga al \textit{Circuito N°1}, se puede abordar el \textit{Circuito Global} desde la perspectiva del \textit{Diagrama en Bloques}. El mismo se muestra a continuación, teniendo en cuenta que: \textit{$Ad(s)$} es la \textit{Función de Transferencia del VFA a Lazo Abierto}, \textit{$Avf_2(s)$} es la \textit{Función de Transferencia del CFA a Lazo Cerrado} y, finalmente, \textit{$K$} es la \textit{Cantidad de Realimentación}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Diagrama_Bloques.png}
+        \caption{Amplificador Compuesto}
+    \label{Figura}
+\end{figure}
+
+\begin{equation}
+    \Large{Ad(s) = \frac{100000}{(1+\frac{s}{2\pi\cdot10[Hz]}) \cdot (1+\frac{s}{2\pi\cdot5.06\cdot10^6[Hz]})}}
+\end{equation}
+
+\begin{equation}
+    \Large{Avf_2(s) = \frac{1+\frac{R_2}{R_1}}{1+\frac{s}{2\pi\cdot fpx[Hz]}}} 
+\end{equation}
+
+\begin{equation}
+    \Large{K = \frac{Ri}{Ri+Rf}}
+\end{equation}
+
+De acuerdo con el diagrama, se puede notar que la \textit{Ganancia Global} del sistema, al igual que el \textit{Circuito N°1}, depende únicamente de la \textit{Red de Realimentación}; por lo tanto, se mantiene la relación entre las resistencias que la conforman, pudiéndose utilizar los mismos valores en ambos diseños.
+
+\newpage
+\begin{equation}
+    \Large{GLA = \left.\frac{V_{o}}{V_{in}}\right\vert_{V_{o'} = 0} = Ad(s) \cdot Avf_2(s)}
+\end{equation}
+
+\begin{equation}
+    \Large{T = \left.\frac{V_{o}}{V_{o'}}\right\vert_{V_{in} = 0} = -K \cdot Ad(s) \cdot Avf_2(s)}
+\end{equation}
+
+\begin{equation}
+    \Large{Avfi = \frac{GLA}{|T|} = \frac{1}{K}=1+\frac{R_f}{R_i}}
+\end{equation}
+
+\begin{equation}
+    \Large{ \frac{R_f}{R_i}=9}
+\end{equation}
+
+Para lograr que el \textit{Amplificador Compuesto} opere en condiciones próximas a la \textit{Máxima Planicidad de Módulo}, se plantea el cálculo del \textit{Margen de Fase ($M\varphi$)}, igualándolo al valor de 65°. A diferencia del \textit{Circuito N°1}, para este diseño se conoce la \textit{Frecuencia Crítica ($f_g$)}; por lo tanto, la única incógnita a hallar es la \textit{Frecuencia del Polo} asociado al \textit{CFA}. Por otro lado, cabe aclarar que, debido a que $f_g$ tiene un valor cercano al segundo polo del \textit{VFA} y recordando que éste era de 5.06[MHz], es necesario incluirlo en el cálculo de $M\varphi$.
+
+\begin{equation}
+    \Large{M\varphi = 180°- \arctan{(\frac{f_g}{f_{p1}})} - \arctan{(\frac{f_g}{f_{p2}})} - \arctan{(\frac{f_g}{f_{px}})} = 65°}
+\end{equation}
+
+\begin{equation}
+    \Large{f_{px} = 33.33[MHz]}
+\end{equation}
+
+Ahora bien, se sabe que en los \textit{Amplificadores} de \textit{Tecnología CFA}, se cumple que el polo asociado está definido por el recíproco del producto entre la \textit{Transcapacitancia ($C_T$)} y la \textit{Resistencia} que conecta su \textit{Salida} con su \textit{Entrada Inversora} ($R_2$). En ese sentido, se procede a determinar el valor de $R_2$ necesario para poder ubicar $f_{px}$ en el valor recién calculado.
+
+\begin{equation}
+    \Large{f_{px} = \frac{1}{2 \pi \cdot C_T \cdot R_2}}
+\end{equation}
+
+\begin{equation}
+    \Large{R_2 = 994.7[\Omega]}
+\end{equation}
+
+Posteriormente, aplicando el concepto del \textit{Producto Ganancia - Ancho de Banda (GBW)} del \textit{Sistema Global} entre las frecuencias de $f_{p1}$ y $f_g$, se llega a la siguiente ecuación que permite calcular el valor de $R_1$ y así finalizar el diseño del circuito. 
+
+\begin{equation}
+    \Large{Ad(0) \cdot (1+\frac{R_2}{R_1}) \cdot f_{p1} = \frac{1}{K} \cdot f_g}
+\end{equation}
+
+\begin{equation}
+    \Large{R_1 = 52.35[\Omega]}
+\end{equation}
+
+De igual manera que para el \textit{Circuito N°1}, los cálculos anteriores se desarrollaron mediante las líneas de código que se muestran a continuación. Así también, se realizaron los respectivos \textit{Diagramas de Bode} de cada uno de los bloques que conforman este \textit{Amplificador Compuesto}.
+
+\newpage
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={7-61}]{Diseno_VFA_CFA.py}
+\end{tcolorbox}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\linewidth]{Componentes_VFA_CFA.png}
+        \caption{Componentes Circuito VFA-CFA}
+    \label{Figura}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bode_VFA_CFA.png}
+        \caption{Magnitud y Fase Circuito VFA-CFA}
+    \label{Figura}
+\end{figure}
+
+\subsubsection{Cálculo de Parámetros}
+Ahora queda evaluar el diseño realizado a través de los mismos parámetros utilizados para el \textit{Circuito N°1}. Estos son: \textit{Ganancia de Lazo ($T_0$)}, \textit{Frecuencia del Polo ($f_p$)}, \textit{Distancia entre Polos ($D_p$)}, \textit{Factor de Calidad del Polo ($Q_p$)} y \textit{Ancho de Banda a -3[dB] del Sistema a Lazo Cerrado ($f_H$)}.
+\vspace{0.5em}
+
+Se trabaja con las mismas expresiones que se mostraron en el diseño anterior, recordando que ahora intervienen los polos $f_{p1}$ y $f_{p2}$ correspondientes al \textit{VFA}. A continuación, se comparte el código elaborado para este punto.
+
+\newpage
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={62-67}]{Diseno_VFA_CFA.py}
+\end{tcolorbox}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Resultados_C2.png}
+        \caption{Resultados Circuito VFA-CFA}
+    \label{Figura}
+\end{figure}
+
+\subsubsection{Respuesta al Escalón}
+Continuando con el proceso de evaluación del sistema, se procede a estimar el \textit{Margen de Fase} ($M\varphi$) a partir de la observación de la \textit{Respuesta al Escalón}, aprovechando las funciones útiles que ofrece \textit{Matlab}. A continuación, se muestra la curva obtenida y los parámetros asociados. Seguido de esto, se efectúa el cálculo de $M\varphi$ mediante el \textit{Coeficiente de Amortiguamiento ($\zeta$)} y el \textit{Sobrepasamiento ($SO$)}.
+\vspace{0.5em}
+
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={68-87}]{Diseno_VFA_CFA.py}
+\end{tcolorbox}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_C2.png}
+        \caption{Respuesta al Escalón Circuito VFA-CFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Resultados_C2_Escalon.png}
+        \caption{Resultados Respuesta al Escalón Circuito VFA-CFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Resultados}
+En función de los resultados, se pueden notar lo siguiente:
+\begin{itemize}
+    \item El \textit{Amplificador Compuesto} tiene un valor de \textit{$Q_p$} igual a 0.629, que difiere en un 11$\%$ en relación con el buscado de 0.707.
+    \item Con respecto a las frecuencias de $f_H$ y $f_p$, la relación entre ellas da como resultado un \textit{$\Omega_H$} de 0.89, un valor que podría considerarse cercano al correspondiente para la condición de \textit{MPM}, que es igual a 1. Teniendo en cuenta esto, el resultado tiene un desvío del 11$\%$.
+    \item Asimismo, al revisar las frecuencias $f_g$ y $f_p$, se tiene un valor de \textit{$\Omega_G$} de aproximadamente 0.629, siendo bastante próximo al que se toma como referencia para el caso de \textit{MPM}, que es igual a 0.644. 
+    \item Finalmente, el \textit{Margen de Fase ($M\varphi$)} estimado es de 67.4°, pudiéndose considerar que se encuentra cerca del deseado de 65° debido a que se mantiene dentro de un rango de tolerancia aceptable de +/- 3$\%$.
+\end{itemize}
+
+\newpage
+\subsubsection{Simulación del Circuito}
+De igual manera que para el \textit{Circuito N°1}, a modo de verificar los resultados anteriores, se procede a realizar las simulaciones pertinentes. En ese sentido, se muestra a continuación el esquema circuital del diseño obtenido en base a los componentes calculados.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{VFA-CFA.png}
+        \caption{Circuito VFA-CFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Para determinar la \textit{Ganancia Global} del sistema, se aplica en la \textit{Entrada del Circuito (Vin)} una \textit{Señal Senoidal} de Amplitud de 1 [V]. De acuerdo con el oscilograma proporcionado, se puede apreciar una Señal de Amplitud de 10 [V] en la \textit{Salida (Vout)}, lo que verifica que la \textit{Ganancia Global} es de 10 veces o 20 [dB].
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_VFA-CFA.png}
+        \caption{Salida VFA-CFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+Continuando con las simulaciones, se realiza el \textit{Barrido en Frecuencia} del circuito para así determinar el \textit{Ancho de Banda de -3 [dB] a Lazo Cerrado} a través del \textit{Diagrama de Bode}. En la siguiente curva se puede notar que la frecuencia para la cual se presenta una caída de 3 [dB] ($f_H$) es de aproximadamente 2.64 [MHz], desviándose en un 6.7$\%$ con respecto al valor calculado de 2.83 [MHz].
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_VFA-CFA.png}
+        \caption{Respuesta en Frecuencia VFA-CFA}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Como última simulación, se estima el \textit{Margen de Fase ($M\varphi$)} observando la \textit{Respuesta al Escalón}. En la gráfica se detecta que la magnitud del Pico Máximo es muy cercana al \textit{Valor de Establecimiento}, que es de 10. A partir de ambos datos, se calcula el \textit{Sobrepasamiento ($SO$)} y, posteriormente, el \textit{Coeficiente de Amortiguamiento ($\zeta$)}. Finalmente, el $M\varphi$ calculado es de aproximadamente 67.11°, un resultado bastante óptimo por su similitud al obtenido en \textit{Matlab}, que es de 67.4°.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_C2_ltspice.png}
+        \caption{Respuesta al Escalón VFA-CFA}
+    \label{Figura}
+\end{figure}
+
+\newpage
+\subsection{Circuito N°3: VFA - CFA (Cero-Polo)}
+\subsubsection{Diseño del Circuito}
+Este último diseño consiste en incluir un \textit{Compensador Cero-Polo} al circuito anterior entre la \textit{Salida del VFA} y la \textit{Entrada del CFA}. Con respecto a las características de este compensador, se puede mencionar que, como su nombre lo indica, agrega un cero y un polo al sistema en ese orden, es decir, la \textit{Frecuencia del Cero ($f_{zc}$)} es menor a la \textit{Frecuencia del Polo ($f_{pc}$)}; y que, además, tiene un \textit{Efecto de Atenuación ($Comp(0)$)} que resulta de la relación entre estas frecuencias. A continuación, se muestra el circuito del compensador, su \textit{Función de Transferencia} y cómo se definen $f_{zc}$, $f_{pc}$ y $Comp(0)$.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Compensador.png}
+        \caption{Compensador Cero-Polo}
+    \label{Figura}
+\end{figure}
+
+\begin{equation}
+    \Large{C(s) = Comp(0)\cdot \frac{1+\frac{s}{2\pi \cdot f_{zc} [Hz]}}{1+\frac{s}{2\pi\cdot f_{pc}[Hz]}}} 
+\end{equation}
+
+\begin{equation}
+    \Large{f_{zc}=\frac{1}{2\pi \cdot C \cdot R_3}} 
+\end{equation}
+
+\begin{equation}
+    \Large{f_{pc}=\frac{1}{2\pi \cdot C \cdot R_3//R_4}} 
+\end{equation}
+
+\begin{equation}
+    \Large{Comp(0)=\frac{f_{zc}}{f_{pc}}} =  \frac{R_4}{R_3+R_4}
+\end{equation}
+
+Para dar inicio al diseño de este circuito, se parte del siguiente \textit{Diagrama de Bloques} a fin de simplificar el \textit{Método de Black} y así poder determinar la \textit{Ganancia Global} requerida del sistema. El diagrama está conformado por: \textit{$Ad(s)$} es la \textit{Función de Transferencia del VFA a Lazo Abierto}, \textit{$C(s)$} es la \textit{Función de Transferencia del Compensador Cero-Polo}, \textit{$Avf_2(s)$} es la \textit{Función de Transferencia del CFA a Lazo Cerrado}, y finalmente, \textit{$K$} es la \textit{Cantidad de Realimentación}.
+\vspace{0.5em}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Diagrama_Bloques_2.png}
+        \caption{Amplificador Compuesto}
+    \label{Figura}
+\end{figure}
+
+\begin{equation}
+    \Large{Ad(s) = \frac{100000}{(1+\frac{s}{2\pi\cdot10[Hz]}) \cdot (1+\frac{s}{2\pi\cdot5.06\cdot10^6[Hz]})}}
+\end{equation}
+
+\begin{equation}
+    \Large{C(s) = Comp(0) \cdot \frac{1+\frac{s}{2\pi \cdot f_{zc}[Hz]}}{1+\frac{s}{2\pi\cdot f_{pc}[Hz]}}} 
+\end{equation}
+
+\begin{equation}
+    \Large{Avf_2(s) = \frac{1+\frac{R_2}{R_1}}{1+\frac{s}{2\pi\cdot f_{px}[Hz]}}} 
+\end{equation}
+
+\begin{equation}
+    \Large{K = \frac{Ri}{Ri+Rf}}
+\end{equation}
+
+En base al esquema, se puede observar que, a pesar de haber agregado el \textit{Compensador}, la \textit{Ganancia Global} del circuito continúa dependiendo únicamente de la \textit{Red de Realimentación}; por lo tanto, se sigue cumpliendo la relación entre las resistencias de dicha red y se pueden utilizar los valores definidos para los diseños anteriores.
+
+\begin{equation}
+    \Large{GLA = \left.\frac{V_{o}}{V_{in}}\right\vert_{V_{o'} = 0} = Ad(s) \cdot C(s) \cdot Avf_2(s) }
+\end{equation}
+
+\begin{equation}
+    \Large{T = \left.\frac{V_{o}}{V_{o'}}\right\vert_{V_{in} = 0} = -K \cdot Ad(s) \cdot C(s) \cdot Avf_2(s)}
+\end{equation}
+
+\begin{equation}
+    \Large{Avfi = \frac{GLA}{|T|} = \frac{1}{K}=1+\frac{R_f}{R_i}}
+\end{equation}
+
+\begin{equation}
+    \Large{ \frac{R_f}{R_i}=9}
+\end{equation}
+
+En cuanto a las especificaciones para este \textit{Amplificador Compuesto}, se pide que la \textit{Frecuencia del Cero del Compensador ($f_{zc}$)} sea tal que cancele la \textit{Frecuencia del Segundo Polo del VFA ($f_{p2}$)}, y que \textit{la Frecuencia del Polo del Compensador ($f_{pc}$)} se ubique a una octava de $f_{zc}$. En ese sentido, las frecuencias $f_{zc}$ y $f_{pc}$ tienen los valores de 5.06 [MHz] y 10.12 [MHz] respectivamente, y, por lo tanto, la atenuación $Comp(0)$ sería igual a 0.5.
+
+\begin{equation}
+    \Large{Com(0) = \frac{f_{zc}}{f_{pc}} = \frac{1}{2}} 
+\end{equation}
+
+\newpage
+\begin{equation}
+    \Large{C(s) = \frac{1}{2} \cdot \frac{1+\frac{s}{2\pi \cdot 5.06\cdot10^6[Hz]}}{1+\frac{s}{2\pi\cdot 10.12\cdot10^6[Hz]}}} 
+\end{equation}
+
+Teniendo en cuenta el dato de la atenuación, se puede establecer la siguiente relación entre las resistencias $R_3$ y $R_4$ asociadas al \textit{Compensador}. Posteriormente, definiendo un valor típico para las resistencias como 1 [k$\Omega$], se procede a calcular el capacitor $C$ de la red mediante la expresión de $f_{zc}$. De esta manera, se finaliza con el diseño del Compensador.
+
+\begin{equation}
+    \Large{Comp(0) = \frac{R_4}{R_3+R_4} = \frac{1}{2}}
+\end{equation}
+
+\begin{equation}
+    \Large{\frac{R_3}{R_4} = 1} 
+\end{equation}
+
+\begin{equation}
+    \Large{R_3=R_4 = 1 [k\Omega]}
+\end{equation}
+
+\begin{equation}
+    \Large{f_{zc} = \frac{1}{2\pi \cdot C \cdot R_3} = 5.06[MHz]}
+\end{equation}
+
+\begin{equation}
+    \Large{C = 31.45[pF]}
+\end{equation}
+
+Otro detalle en la consigna es que, debido a la atenuación producida por el \textit{Compensador} en la \textit{Ganancia de Lazo Abierto} del sistema, se pide ajustar adecuadamente la \textit{Red de Realimentación} asociada al \textit{CFA}, a modo de compensar dicha atenuación. Entonces, teniendo en cuenta que $Comp(0)$ equivale a 0.5, $Avf_2(0)$ debería duplicar su valor actual, pasando de ser una \textit{Ganancia} de 20 veces a una de 40. Esto último implica modificar las resistencias de su propia red de realimentación
+\vspace{0.5em}
+
+Continuando con la idea anterior, dado que el amplificador en cuestión es de \textit{Tecnología CFA}, es posible ajustar la ganancia del mismo manteniendo la ubicación en frecuencia del polo asociado. Esto se logra modificando $R_1$ y dejando $R_2$ fija.
+
+\begin{equation}
+    \Large{Avf_2(0)  = 1 +\frac{R_2}{R_1}}
+\end{equation}
+
+\begin{equation}
+    \Large{R_1 = 25.5[\Omega]}
+\end{equation}
+
+De esta manera, se da por terminada la etapa del diseño, y ahora corresponde evaluar la misma a través de las características trabajadas en los otros circuitos. Los cálculos anteriores fueron desarrollados mediante el código que se muestra a continuación. Asimismo, se adjuntan los \textit{Diagramas de Bode} de los bloques que constituyen el \textit{Circuito Global}.
+\vspace{0.4em}
+
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={7-14}]{Diseno_VFA_CFA_Cero_Polo.py}
+\end{tcolorbox}
+
+\newpage
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={15-70}]{Diseno_VFA_CFA_Cero_Polo.py}
+\end{tcolorbox}
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\linewidth]{Componentes_VFA_CFA_Cero_Polo.png}
+        \caption{Componentes Circuito VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Bode_VFA_CFA_Cero_Polo.png}
+        \caption{Magnitud y Fase Circuito VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Cálculo de Parámetros}
+Se da inicio a este apartado calculando, primeramente, el \textit{Margen de Fase ($M\varphi$)} del circuito mediante el siguiente desarrollo. En el mismo, se tienen en cuenta las frecuencias del \textit{Primer Polo del VFA ($f_{p1}$)}, del \textit{Polo del Compensador ($f_{pc}$)} y del \textit{Polo del CFA ($f_{px}$)}. Con respecto a la \textit{Frecuencia Crítica ($f_g$)}, se mantiene el valor de 2 [MHz].
+
+\begin{equation}
+    \Large{M\varphi = 180°-\arctan{(\frac{f_g}{f_{p1}})} - \arctan{(\frac{f_g}{f_{pc}})} -  \arctan{(\frac{f_g}{f_{px}})}=75.39°}
+\end{equation}
+
+\newpage
+Una vez obtenido el $M\varphi$ se procede a calcular el resto de los parámetros característicos: \textit{Ganancia de Lazo ($T_0$)}, \textit{Frecuencia del Polo ($f_p$)}, \textit{Distancia entre Polos ($D_p$)}, \textit{Factor de Calidad del Polo ($Q_p$)} y \textit{Ancho de Banda a -3[dB] del Sistema a Lazo Cerrado ($f_H$)}. 
+\vspace{0.5em}
+
+De igual manera que en el diseño anterior, se utilizan las mismas expresiones definidas en el \textit{Circuito N°1}, teniendo en cuenta las frecuencias $f_{p1}$ y $f_{pc}$. Seguidamente, se muestra el código utilizado para efectuar los cálculos.
+\vspace{0.5em}
+
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={72-82}]{Diseno_VFA_CFA_Cero_Polo.py}
+\end{tcolorbox}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.55\linewidth]{Resultados_C3.png}
+        \caption{Resultados Circuito VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\subsubsection{Respuesta al Escalón}
+Siguiendo con la estimación del $M\varphi$ a partir de la \textit{Respuesta al Escalón}, se obtuvo la siguiente curva. De acuerdo con la misma, se puede observar que, a diferencia de los circuitos anteriores, esta vez no se produce un \textit{Sobrepasamiento ($SO$)} y, por lo tanto, tampoco existe un\textit{ Coeficiente de Amortiguamiento ($\zeta$)}. De hecho, se podría decir que la curva resultante sugiere que el diseño del \textit{Amplificador Compuesto}, junto con un \textit{Compensador}, se comporta como si se tratara de un \textit{Sistema de Primer Orden}, es decir, de un Único Polo. Más adelante se buscará comparar este resultado con la \textit{Simulación en LTspice}.
+
+\newpage
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Respuesta_C3.png}
+        \caption{Respuesta al Escalón Circuito VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+
+\subsubsection{Resultados}
+En base al desarrollo anterior, se realizan las siguientes observaciones:
+\begin{itemize}
+    \item El circuito posee un valor de \textit{$Q_p$} de 0.445, el cual difiere bastante del asociado a la condición de \textit{MPM}, que es de 0.707. Sin embargo, podría decirse que tiene cierta proximidad al valor de \textit{$Q_p$} de 0.577, que corresponde a la condición de \textit{Máxima Planicidad de Retardo (MPR)} y presenta un desvío del 22.88$\%$ con respecto a este último.
+    \item Pasando a hablar de las frecuencias \textit{$f_H$} y \textit{$f_p$}, el parámetro \textit{$\Omega_H$}, que se define por la relación entre ellas, es aproximadamente igual a 0.63, lo cual, nuevamente, está bastante alejado del valor necesario para la condición \textit{MPM}; sin embargo, tiene cierta tendencia al \textit{$\Omega_H$} asociado a la condición \textit{MPR}, que es de 0.786. La discrepancia con respecto a este valor es de 19.85$\%$.
+    \item Continuando con el análisis, el parámetro \textit{$\Omega_G$}, que resulta de la relación entre las frecuencias \textit{$f_g$} y \textit{$f_p$}, está alrededor de 0.44. Este valor difiere aproximadamente en un 20$\%$ en relación al \textit{$\Omega_G$} de 0.55, que corresponde a la condición de \textit{MPR}.
+    \item Para cerrar este apartado, el \textit{Margen de Fase ($M\varphi$)} del \textit{Circuito Global} calculado equivale a 75.39°, el cual se acerca bastante al límite superior, teniendo en cuenta un rango de tolerancia de +/- 3°, del \textit{$M\varphi$} que se cumple en la condición \textit{MPR}, que es 72.2°.
+\end{itemize}
+
+\newpage
+\subsubsection{Simulación del Circuito}
+Nuevamente, se procede a evaluar los resultados obtenidos utilizando como herramienta las simulaciones. A continuación, se presenta el circuito resultante, armado en función de los componentes calculados previamente.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{VFA-CFA_Cero-Polo.png}
+        \caption{Circuito VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+A fin de conocer la \textit{Ganancia Global}, se inyecta en la \textit{Entrada del Circuito (Vin)} una \textit{Señal Senoidal} de Amplitud igual a 1 [V]. Se puede notar que la \textit{Señal de Salida (Vout)} tiene una amplitud igual a 10 [V], lo que indica que la \textit{Ganancia Global} es de 10 veces o 20 [dB].
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Salida_VFA-CFA_Cero-Polo.png}
+        \caption{Salida VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\newpage
+La siguiente simulación consiste en obtener el \textit{Diagrama de Bode} del circuito. En la siguiente curva se observa que la frecuencia que determina el Ancho de Banda a -3 [dB] ($f_H$) es de aproximadamente 2.92 [MHz], la cual difiere en un 3.2$\%$ en relación con el valor calculado de 2.83 [MHz].
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_VFA-CFA_Cero-Polo.png}
+        \caption{Respuesta en Frecuencia VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+Para terminar este estudio, se realiza la estimación del \textit{Margen de Fase ($M\varphi$)} en función de la \textit{Respuesta al Escalón}. La curva proporcionada por el \textit{Simulador LTspice} muestra un \textit{Pico Máximo} de un valor bastante pequeño; prácticamente, se podría considerar al \textit{Circuito Global} como un \textit{Sistema de Primer Orden}. Teniendo en cuenta el valor anterior, es posible estimar el valor de \textit{$M\varphi$} en función de los parámetros conocidos. Lo anterior conduce a un \textit{$M\varphi$} de aproximadamente 71.78°. Este resultado difiere en un 4.8$\%$ del calculado de 75.39°; sin embargo, cabe destacar que se encuentra dentro del rango de +/- 3° con respecto al valor correspondiente a \textit{MPR} de 72.2°.
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Respuesta_C3_ltspice.png}
+        \caption{Respuesta al Escalón VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+
+\newpage
+\begin{tcolorbox}[colback=white!95!gray, colframe=black!50, title= Código exportado]
+\lstinputlisting[linerange={83-96}]{Diseno_VFA_CFA_Cero_Polo.py}
+\end{tcolorbox}
+\vspace{0.5em}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Resultados_C3_Escalon.png}
+        \caption{Resultados Respuesta al Escalón Circuito VFA-CFA Cero-Polo}
+    \label{Figura}
+\end{figure}
+\vspace{0.5em}
+
+\section{Conclusión}
+En este laboratorio se abordó el diseño de \textit{Amplificadores Compuestos} con el objetivo de aplicar los conceptos aprendidos de \textit{Compensación}. Tanto para el \textit{Primer} como para el \textit{Segundo Diseño}, no fue necesario agregar un compensador propiamente dicho; sino que bastó con seleccionar adecuadamente los componentes asociados para lograr el funcionamiento en condiciones cercanas a \textit{MPM}. En cambio, para el \textit{Tercer Diseño}, la consigna exigía incluir un \textit{Compensador Cero-Polo} y estudiar los efectos que producía en el circuito.
+\vspace{0.5em}
+
+A modo de realizar un recorrido por los tres diseños trabajados: el \textit{Circuito N°1}, conformado por \textit{Amplificadores de Tecnología VFA}, de acuerdo con los resultados, tanto en los cálculos como en la simulación, presentó un \textit{Margen de Fase ($M\varphi$)} que se acercaba por debajo al buscado de 65°; posteriormente, el \textit{Circuito N°2}, al reemplazar uno de los \textit{VFA} por un \textit{Amplificador de Tecnología CFA}, el $M\varphi$ obtenido en los cálculos y en la simulación, mostró un valor ligeramente por encima de 65°; sin embargo, se mantenía en el rango de tolerancia de +/- 3; finalmente, al agregar el \textit{Compensador Cero-Polo} para el \textit{Circuito N°3}, nuevamente, los cálculos y simulaciones evidenciaron un incremento en el $M\varphi$, esta vez siendo notablemente mayor a 65° y aproximándose a la condición de \textit{MPR}.
+\vspace{0.5em}
+
+Además, el trabajo permitió incorporar herramientas de análisis y simulación, principalmente \textit{Python} para el procesamiento de datos y \textit{LTspice} para simulaciones circuitales, lo que potenció la comprensión y validación de los diseños y enriqueció el proceso formativo.
+
+\end{document}
