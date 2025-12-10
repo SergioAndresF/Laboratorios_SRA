@@ -1,0 +1,79 @@
+LTspice 24.1.7 for Windows
+Circuit: E:\Síntesis de Redes Activas\Tps\Filtro_Ajuste_Ganancia_2.net
+Start Time: Wed Dec 10 01:35:43 2025
+solver = Normal
+Maximum thread count: 8
+tnom = 27
+temp = 27
+method = trap
+Early termination of direct N-R iteration.
+Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
+Starting Gmin stepping
+Gmin = 10
+vernier = 0.5
+vernier = 0.25
+Gmin = 2.62144
+vernier = 0.125
+vernier = 0.0625
+vernier = 0.03125
+vernier = 0.015625
+Gmin = 2.5611
+vernier = 0.0078125
+vernier = 0.0104167
+vernier = 0.00520833
+vernier = 0.00260417
+Gmin = 2.53459
+vernier = 0.00347222
+Gmin = 2.51487
+vernier = 0.00462963
+vernier = 0.00231481
+vernier = 0.00115741
+vernier = 0.00154321
+Gmin = 2.5093
+vernier = 0.00205761
+vernier = 0.00102881
+vernier = 0.000514403
+Gmin = 2.50253
+vernier = 0.00068587
+Gmin = 2.49867
+vernier = 0.000914493
+vernier = 0.00121932
+vernier = 0.000609662
+Gmin = 2.49373
+vernier = 0.000457246
+vernier = 0.000609662
+Gmin = 2.49078
+vernier = 0.000812882
+vernier = 0.00108384
+vernier = 0.000541921
+Gmin = 2.48699
+vernier = 0.000406441
+vernier = 0.000541921
+Gmin = 2.48438
+vernier = 0.000722561
+vernier = 0.000541921
+vernier = 0.000406441
+Gmin = 2.48245
+vernier = 0.000541921
+vernier = 0.000722561
+vernier = 0.000541921
+vernier = 0.000406441
+Gmin = 2.48018
+vernier = 0.000541921
+vernier = 0.00040644
+Gmin = 0
+Gmin stepping failed
+
+Starting source stepping with srcstepmethod=0
+Source Step = 3.0303%
+Source Step = 33.3333%
+Source Step = 63.6364%
+Source Step = 93.9394%
+Source stepping succeeded in finding the operating point.
+
+Total elapsed time: 1.656 seconds.
+
+Files loaded:
+E:\Síntesis de Redes Activas\Tps\Filtro_Ajuste_Ganancia_2.net
+E:\LM324.lib
+
